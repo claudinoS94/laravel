@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+    php:
+        container_name: "php81"
+        build:
+            context: .
+            target: php
+        volumes:
+            - ./:/var/www
+        ports:
+            - "9090:9090"
+        working_dir: /var/www
+        depends_on:
+            - database
+        environment:
+            - CONTAINER_ROLE=app
+
+    database:
+        image: mysql:8.0
+        ports:
+            - "3307:3307"
+        container_name: "mysql"
+        volumes:
+            - db_data:/var/lib/mysql
+        environment:
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+            - MYSQL_DATABASE=${DB_DATABASE}
+        command: ["--port=3307"]
+
+volumes:
+    db_data: ~
